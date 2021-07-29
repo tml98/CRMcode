@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tml.mapper.ActivityMapper">
+
+    <insert id="insert">
+        insert into tbl_marketing_activities values(
+            #{id},
+            #{owner},
+            #{name},
+            #{startDate},
+            #{endDate},
+            #{cost},
+            #{description},
+            #{createBy},
+            #{createTime},
+            #{editBy},
+            #{editTime}
+        )
+    </insert>
+    <insert id="insertList">
+        insert into tbl_marketing_activities values
+        <foreach collection="list" item="act" separator="," >
+            (
+                #{act.id},
+                #{act.owner},
+                #{act.name},
+                #{act.startDate},
+                #{act.endDate},
+                #{act.cost},
+                #{act.description},
+                #{act.createBy},
+                #{act.createTime},
+                #{act.editBy},
+                #{act.editTime}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="delete" >
+        delete from tbl_marketing_activities where id in(
+            <foreach collection="array"  separator="," item="id" >
+                #{id}
+            </foreach>
+        )
+    </delete>
+
+    <update id="update">
+        update tbl_marketing_activities set
+            owner=#{owner},
+            name=#{name},
+            startDate=#{startDate},
+            endDate=#{endDate},
+            cost=#{cost},
+            description=#{description},
+            createBy=#{createBy},
+            createTime=#{createTime},
+            editBy=#{editBy},
+            editTime=#{editTime}
+        where id=#{id}
+    </update>
+
+    <select id="getBySome" resultType="activity">
+        select * from tbl_marketing_activities
+        <where>
+            <if test="name != null and name!=''">
+                and name like concat('%',#{name},'%')
+            </if>
+            <if test="owner != null and owner!=''">
+                and owner like concat('%',#{owner},'%')
+            </if>
+            <if test="startDate != null and startDate!=''">
+                and startDate=#{startDate}
+            </if>
+            <if test="endDate != null and endDate!=''">
+                and endDate=#{endDate}
+            </if>
+        </where>
+    </select>
+
+    <select id="get" resultType="activity">
+        select * from tbl_marketing_activities
+    </select>
+
+</mapper>

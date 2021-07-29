@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tml.mapper.DeptMapper">
+    <insert id="insert">
+        insert into tbl_dept values(
+            #{id},
+            #{no},
+            #{name},
+            #{manager},
+            #{description},
+            #{phone}
+        )
+    </insert>
+
+    <delete id="delete">
+        delete from tbl_dept where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="update">
+        update tbl_dept
+        set
+            no=#{no},
+            name=#{name},
+            manager=#{manager},
+            description=#{description},
+            phone=#{phone}
+        where id=#{id}
+    </update>
+
+    <select id="get" resultType="dept">
+        select * from tbl_dept where id=#{id}
+    </select>
+    <select id="getAll" resultType="dept">
+        select * from tbl_dept
+    </select>
+</mapper>

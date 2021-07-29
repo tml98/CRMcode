@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tml.mapper.TranMapper">
+    <sql id="searchSQL">
+        <where>
+            <if test="map.owner != null and map.owner != ''">
+                and tran.owner like '%' #{map.owner} '%'
+            </if>
+            <if test="map.name != null and map.name != ''">
+                and tran.name like '%' #{map.name} '%'
+            </if>
+            <if test="map.customerName != null and map.customerName != ''">
+                and cus.name '%' #{map.customerName} '%'
+            </if>
+            <if test="map.contactFullName != null and map.contactFullName != ''">
+                and con.fullName like '%' #{map.contactFullName} '%'
+            </if>
+            <if test="map.stage != null and map.stage != ''">
+                and tran.stage=#{map.stage}
+            </if>
+            <if test="map.type != null and map.type != ''">
+                and tran.type=#{map.type}
+            </if>
+            <if test="map.source != null and map.source != ''">
+                and tran.source=#{map.source}
+            </if>
+        </where>
+    </sql>
+
+    <resultMap id="tranMap" type="tran">
+        <id property="id" column="tran_id" />
+        <result property="owner" column="tran_owner" />
+        <result property="amountOfMoney" column="tran_amountOfMoney" />
+        <result property="name" column="tran_name" />
+        <result property="expectedClosingDate" column="tran_expectedClosingDate" />
+        <result property="customerId" column="tran_customerId" />
+        <result property="stage" column="tran_stage" />
+        <result property="type" column="tran_type" />
+        <result property="source" column="tran_source" />
+        <result property="activityId" column="tran_activityId" />
+        <result property="contactsId" column="tran_contactsId" />
+        <result property="description" column="tran_description" />
+        <result property="createBy" column="tran_createBy" />
+        <result property="createTime" column="tran_createTime" />
+        <result property="editBy" column="tran_editBy" />
+        <result property="editTime" column="tran_editTime" />
+        <result property="contactSummary" column="tran_contactSummary" />
+        <result property="nextContactTime" column="tran_nextContactTime" />
+        <association property="contact" >
+            <id property="id" column="con_id" />
+            <result property="owner" column="con_owner" />
+            <result property="source" column="con_source" />
+            <result property="appellation" column="con_appellation" />
+            <result property="fullName" column="con_fullName" />
+            <result property="email" column="con_email" />
+            <result property="job" column="con_job" />
+            <result property="mphone" column="con_mphone" />
+            <result property="description" column="con_description" />
+            <result property="birth" column="con_birth" />
+            <result property="customerId" column="con_customerId" />
+            <result property="createBy" column="con_createBy" />
+            <result property="createTime" column="con_createTime" />
+            <result property="editBy" column="con_editBy" />
+            <result property="editTime" column="con_editTime" />
+            <result property="contactSummary" column="con_contactSummary" />
+            <result property="nextContactTime" column="con_nextContactTime" />
+            <result property="address" column="con_address" />
+        </association>
+        <association property="customer" >
+            <id property="id" column="cus_id" />
+            <result property="owner" column="cus_owner" />
+            <result property="name" column="cus_name" />
+            <result property="phone" column="cus_phone" />
+            <result property="website" column="cus_website" />
+            <result property="description" column="cus_description" />
+            <result property="createBy" column="cus_createBy" />
+            <result property="createTime" column="cus_createTime" />
+            <result property="editBy" column="cus_editBy" />
+            <result property="editTime" column="cus_editTime" />
+            <result property="contactSummary" column="cus_contactSummary" />
+            <result property="nextContactTime" column="cus_nextContactTime" />
+            <result property="address" column="cus_address" />
+        </association>
+        <association property="activity">
+            <result property="id" column="act_id" />
+            <result property="owner" column="act_owner" />
+            <result property="name" column="act_name" />
+            <result property="startDate" column="act_startDate" />
+            <result property="endDate" column="act_endDate" />
+            <result property="cost" column="act_cost" />
+            <result property="description" column="act_description" />
+            <result property="createBy" column="act_createBy" />
+            <result property="createTime" column="act_createTime" />
+            <result property="editBy" column="act_editBy" />
+            <result property="editTime" column="act_editTime" />
+        </association>
+    </resultMap>
+
+  <select id="getBySome" resultMap="tranMap">
+      SELECT
+          tran.id tran_id,
+          tran.owner tran_owner,
+          tran.amountOfMoney tran_amountOfMoney,
+          tran.name tran_name,
+          tran.expectedClosingDate tran_expectedClosingDate,
+          tran.customerId tran_customerId,
+          tran.stage tran_stage,
+          tran.type tran_type,
+          tran.source tran_source,
+          tran.activityId tran_activityId,
+          tran.contactsId tran_contactsId,
+          tran.description tran_description,
+          tran.createBy tran_createBy,
+          tran.createTime tran_createTime,
+          tran.editBy tran_editBy,
+          tran.editTime tran_editTime,
+          tran.contactSummary tran_contactSummary,
+          tran.nextContactTime tran_nextContactTime,
+
+          con.id con_id,
+          con.owner con_owner,
+          con.source con_source,
+          con.appellation con_appellation,
+          con.fullName con_fullName,
+          con.email con_email,
+          con.job con_job,
+          con.mphone con_mphone,
+          con.description con_description,
+          con.birth con_birth,
+          con.customerId con_customerId,
+          con.createBy con_createBy,
+          con.createTime con_createTime,
+          con.editBy con_editBy,
+          con.editTime con_editTime,
+          con.contactSummary con_contactSummary,
+          con.nextContactTime con_nextContactTime,
+          con.address con_address,
+
+          cus.id cus_id,
+          cus.owner cus_owner,
+          cus.name cus_name,
+          cus.phone cus_phone,
+          cus.website cus_website,
+          cus.description cus_description,
+          cus.createBy cus_createBy,
+          cus.createTime cus_createTime,
+          cus.editBy cus_editBy,
+          cus.editTime cus_editTime,
+          cus.contactSummary cus_contactSummary,
+          cus.nextContactTime cus_nextContactTime,
+          cus.address cus_address,
+
+          act.id act_id,
+          act.owner act_owner,
+          act.name act_name,
+          act.startDate act_startDate,
+          act.endDate act_endDate,
+          act.cost act_cost,
+          act.description act_description,
+          act.createBy act_createBy,
+          act.createTime act_createTime,
+          act.editBy act_editBy,
+          act.editTime act_editTime
+      FROM
+          tbl_transaction tran
+              LEFT JOIN tbl_contacts con ON tran.contactsId = con.id
+              LEFT JOIN tbl_customer cus ON tran.customerId = cus.id
+              LEFT JOIN tbl_marketing_activities act ON tran.activityId = act.id
+      <include refid="searchSQL" />
+      limit #{startIndex},#{rowsPerPage}
+  </select>
+
+    <select id="getCount" resultType="integer">
+        select count(*) from tbl_transaction
+        <include refid="searchSQL" />
+    </select>
+</mapper>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tml.mapper.ClueMapper">
+
+    <sql id="searchSQL">
+        <where>
+            <if test="data.fullName != null and data.fullName != ''">
+                and fullName like concat('%',#{data.fullName},'%')
+            </if>
+            <if test="data.company != null and data.company != ''">
+                and company like concat('%',#{data.company},'%')
+            </if>
+            <if test="data.phone != null and data.phone != ''">
+                and phone like concat('%',#{data.phone},'%')
+            </if>
+            <if test="data.owner != null and data.owner != ''">
+                and owner like concat('%',#{data.owner},'%')
+            </if>
+            <if test="data.mphone != null and data.mphone != ''">
+                and mphone like concat('%',#{data.mphone},'%')
+            </if>
+            <if test="data.source != null and data.source != ''">
+                and source=#{data.source}
+            </if>
+            <if test="data.state != null and data.state != ''">
+                and state=#{data.state}
+            </if>
+        </where>
+    </sql>
+
+    <select id="getCount"	resultType="integer">
+        select count(*) from tbl_clue
+        <include refid="searchSQL" />
+    </select>
+    <select id="get"	resultType="clue">
+        select * from tbl_clue
+        <include refid="searchSQL" />
+        limit #{startIndex},#{rowsPerPage}
+    </select>
+    
+    <resultMap id="getClueActivity" type="clue">
+        <id property="id" column="clue_id" />
+        <result property="owner" column="clue_owner" />
+        <result property="company" column="clue_company" />
+        <result property="phone" column="clue_phone" />
+        <result property="website" column="clue_website" />
+        <result property="description" column="clue_description" />
+        <result property="fullName" column="clue_fullName" />
+        <result property="appellation" column="clue_appellation" />
+        <result property="source" column="clue_source" />
+        <result property="email" column="clue_email" />
+        <result property="mphone" column="clue_mphone" />
+        <result property="job" column="clue_job" />
+        <result property="state" column="clue_state" />
+        <result property="createBy" column="clue_createBy" />
+        <result property="createTime" column="clue_createTime" />
+        <result property="editBy" column="clue_editBy" />
+        <result property="editTime" column="clue_editTime" />
+        <result property="contactSummary" column="clue_contactSummary" />
+        <result property="nextContactTime" column="clue_nextContactTime" />
+        <result property="address" column="clue_address" />
+        <collection property="activities" javaType="list" ofType="activity">
+            <result property="id" column="act_id" />
+            <result property="owner" column="act_owner" />
+            <result property="name" column="act_name" />
+            <result property="startDate" column="act_startDate" />
+            <result property="endDate" column="act_endDate" />
+            <result property="cost" column="act_cost" />
+            <result property="description" column="act_description" />
+            <result property="createBy" column="act_createBy" />
+            <result property="createTime" column="act_createTime" />
+            <result property="editBy" column="act_editBy" />
+            <result property="editTime" column="act_editTime" />
+        </collection>
+    </resultMap>
+
+    <select id="getOne" resultMap="getClueActivity">
+        select
+            clue.id clue_id,
+            clue.owner clue_owner,
+            clue.company clue_company,
+            clue.phone clue_phone,
+            clue.website clue_website,
+            clue.description clue_description,
+            clue.fullName clue_fullName,
+            clue.appellation clue_appellation,
+            clue.source clue_source,
+            clue.email clue_email,
+            clue.mphone clue_mphone,
+            clue.job clue_job,
+            clue.state clue_state,
+            clue.createBy clue_createBy,
+            clue.createTime clue_createTime,
+            clue.editBy clue_editBy,
+            clue.editTime clue_editTime,
+            clue.contactSummary clue_contactSummary,
+            clue.nextContactTime clue_nextContactTime,
+            clue.address clue_address,
+            act.id act_id,
+            act.owner act_owner,
+            act.name act_name,
+            act.startDate act_startDate,
+            act.endDate act_endDate,
+            act.cost act_cost,
+            act.description act_description,
+            act.createBy act_createBy,
+            act.createTime act_createTime,
+            act.editBy act_editBy,
+            act.editTime act_editTime
+        from tbl_clue clue
+        left join tbl_clue_activity_relation car
+        on clue.id=car.clueId
+        left join tbl_marketing_activities act
+        on car.activityId=act.id
+        where clue.id=#{id}
+    </select>
+
+    <delete id="deleteCAR">
+        delete from tbl_clue_activity_relation where
+            clueId=#{clueId} and activityId=#{activityId}
+    </delete>
+</mapper>
